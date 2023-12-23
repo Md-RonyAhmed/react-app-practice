@@ -1,6 +1,32 @@
 import { Link } from "react-router-dom";
+import auth from "../../../firebase/firebase.config";
+import { useCreateUserWithEmailAndPassword, useUpdateProfile } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
+import Loading from "../../../components/Loading/Loading";
 
 const SignUp = () => {
+  const [createUserWithEmailAndPassword, user, loading] =
+    useCreateUserWithEmailAndPassword(auth,{ sendEmailVerification: true });
+    const [updateProfile, updating] = useUpdateProfile(auth);
+
+    if (loading || updating) {
+      return <Loading></Loading>;
+    }
+  const handleSignUp = async(e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const confirmPass= e.target.cpassword.value;
+
+    if (password !== confirmPass) {
+      return toast.error("Password doesn't match");
+    }
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: name });
+    console.log(user)
+    return toast.success("Sign Up Successfully!");
+  };
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -118,7 +144,7 @@ const SignUp = () => {
                 Sign In
               </Link>
             </p>
-            <form action="#" method="POST" className="mt-8">
+            <form onSubmit={handleSignUp} className="mt-8">
               <div className="space-y-5">
                 <div>
                   <label
@@ -130,6 +156,7 @@ const SignUp = () => {
                   </label>
                   <div className="mt-2">
                     <input
+                      name="name"
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Full Name"
@@ -149,6 +176,7 @@ const SignUp = () => {
                     <input
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="email"
+                      name="email"
                       placeholder="Email"
                       id="email"
                     ></input>
@@ -168,9 +196,36 @@ const SignUp = () => {
                     <input
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="password"
+                      name="password"
                       placeholder="Password"
                       id="password"
                     ></input>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="c-password"
+                      className="text-base font-medium text-gray-900"
+                    >
+                      Confirm Password
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                      type="password"
+                      name="cpassword"
+                      placeholder="Confirm Password"
+                      id="c-password"
+                    ></input>
+                  </div>
+                  <div className="mt-8">
+                    <input
+                      value="SIGN UP"
+                      type="submit"
+                      className="rounded-md w-full cursor-pointer bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    />
                   </div>
                 </div>
               </div>

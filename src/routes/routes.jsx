@@ -14,6 +14,7 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement:<NotFound/>,
     children: [
       {
         path: "/",
@@ -48,11 +49,7 @@ const routes = createBrowserRouter([
   {
     path: "signup",
     element: <SignUp />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+  }
 ]);
 
 export default routes;
