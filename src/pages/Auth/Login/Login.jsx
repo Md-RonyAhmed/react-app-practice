@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../../firebase/firebase.config";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
@@ -6,13 +6,11 @@ import Loading from "../../../components/Loading/Loading";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
-  const [
-    signInWithEmailAndPassword,
-    user,
-    loading,
-    error,
-  ] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
+  const location = useLocation();
+
   const handleBack = () => {
     navigate(-1);
   };
@@ -21,7 +19,9 @@ const Login = () => {
     navigate("/");
   };
 
-  if (loading ) {
+  let from = location.state?.from?.pathname || "/";
+
+  if (loading) {
     return <Loading></Loading>;
   }
 
@@ -31,7 +31,11 @@ const Login = () => {
   }
 
   if (user) {
-    navigate("/");
+    console.log(from)
+    navigate(from, { replace: true });
+    toast.success(`Log In Successfully`, {
+      toastId: "success1",
+    });
   }
 
   const handleSignIn = async (e) => {
@@ -39,7 +43,6 @@ const Login = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     await signInWithEmailAndPassword(email, password);
-    return toast.success("Sign In Successfully!");
   };
 
   return (
@@ -87,7 +90,7 @@ const Login = () => {
                   </label>
                   <div className="mt-2">
                     <input
-                    name="email"
+                      name="email"
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="email"
                       placeholder="Email"
@@ -114,7 +117,7 @@ const Login = () => {
                   </div>
                   <div className="mt-2">
                     <input
-                    name="password"
+                      name="password"
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="password"
                       placeholder="Password"
@@ -130,7 +133,7 @@ const Login = () => {
                 </div>
               </div>
             </form>
-            <SocialLogin/>
+            <SocialLogin />
           </div>
         </div>
       </section>

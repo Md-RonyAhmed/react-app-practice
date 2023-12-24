@@ -9,12 +9,14 @@ import NotFound from "../pages/NotFound/NotFound";
 import Users from "../pages/Users/Users";
 import UserDetails from "../components/UserDetails/UserDetails";
 import ErrorPage from "../components/ErrorPage/ErrorPage";
+import PrivateRoutes from "./PrivateRoutes";
+// import fetchData from "../components/utils/fetchData";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement:<NotFound/>,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
@@ -22,7 +24,11 @@ const routes = createBrowserRouter([
       },
       {
         path: "about",
-        element: <About />,
+        element: (
+          <PrivateRoutes>
+            <About />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "contact",
@@ -30,15 +36,19 @@ const routes = createBrowserRouter([
       },
       {
         path: "users",
-        element: <Users />,
-        loader: () => fetch("https://jsonplaceholder.typicode.com/users/"),
-        errorElement: <ErrorPage/>
+        element: (
+          <PrivateRoutes>
+            <Users />
+          </PrivateRoutes>
+        ),
+        errorElement: <ErrorPage />,
       },
       {
         path: "users/:userId",
         element: <UserDetails />,
-        loader: ({params}) =>fetch(`https://jsonplaceholder.typicode.com/users/${params.userId}`),
-        errorElement: <ErrorPage/>
+        loader: ({ params }) =>
+          fetch(`https://jsonplaceholder.typicode.com/users/${params.userId}`),
+        errorElement: <ErrorPage />,
       },
     ],
   },
@@ -49,7 +59,7 @@ const routes = createBrowserRouter([
   {
     path: "signup",
     element: <SignUp />,
-  }
+  },
 ]);
 
 export default routes;

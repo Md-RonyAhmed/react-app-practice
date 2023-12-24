@@ -23,7 +23,7 @@ const SocialLogin = () => {
         </p>
       );
     }
-
+    
     if (googleUser||githubUser) {
       navigate("/");
       toast.success(`Log In Successfully`, {

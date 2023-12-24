@@ -6,7 +6,7 @@ import {
 } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 import Loading from "../../../components/Loading/Loading";
-import SocialLogin from "../SocialLogin/SocialLogin";
+// import SocialLogin from "../SocialLogin/SocialLogin";
 // import Error from "../../../components/Error/Error";
 
 const SignUp = () => {
@@ -249,7 +249,7 @@ const SignUp = () => {
                 </div>
               </div>
             </form>
-            <SocialLogin/>
+            {/* <SocialLogin/> */}
           </div>
         </div>
       </div>
